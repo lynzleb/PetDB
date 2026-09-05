@@ -1,0 +1,73 @@
+// PetDB Prisma schema
+// Source of truth for the data model: owners -> pets -> blood tests / vaccinations
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Owner {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  pets      Pet[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pet {
+  id           String        @id @default(cuid())
+  name         String
+  species      Species
+  breed        String?
+  birthDate    DateTime?
+  owner        Owner         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId      String
+  bloodTests   BloodTest[]
+  vaccinations Vaccination[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([ownerId])
+}
+
+model BloodTest {
+  id        String   @id @default(cuid())
+  testType  String // e.g. "Hemoglobin", "White Blood Cell Count"
+  value     Float
+  unit      String // e.g. "g/dL", "10^3/uL"
+  takenAt   DateTime
+  notes     String?
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  petId     String
+  createdAt DateTime @default(now())
+
+  @@index([petId])
+}
+
+model Vaccination {
+  id             String    @id @default(cuid())
+  vaccineName    String
+  administeredAt DateTime
+  nextDueAt      DateTime?
+  notes          String?
+  pet            Pet       @relation(fields: [petId], references: [id], onDelete: Cascade)
+  petId          String
+  createdAt      DateTime  @default(now())
+
+  @@index([petId])
+}
+
+enum Species {
+  DOG
+  CAT
+  BIRD
+  RABBIT
+  REPTILE
+  OTHER
+}

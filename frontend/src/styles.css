@@ -1,0 +1,120 @@
+:root {
+  --teal: #0f766e;
+  --teal-dark: #115e59;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: var(--teal);
+  color: #fff;
+  padding: 1.25rem 1rem calc(1.25rem + env(safe-area-inset-top));
+  position: sticky;
+  top: 0;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  opacity: 0.85;
+  font-size: 0.9rem;
+}
+
+.app-main {
+  flex: 1;
+  padding: 1rem;
+}
+
+.hint {
+  color: var(--muted);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.hint-error {
+  color: #b91c1c;
+}
+
+.pet-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pet-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.pet-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pet-emoji {
+  font-size: 2rem;
+}
+
+.pet-name {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.pet-meta {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.pet-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0;
+}
+
+.pet-stats dt {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pet-stats dd {
+  margin: 0.2rem 0 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
