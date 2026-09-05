@@ -82,7 +82,7 @@ if [[ "$OSTYPE" == darwin* && "${PETDB_SKIP_GITHUB:-}" != "1" ]]; then
   echo "==> GitHub MCP token (optional)"
   echo "    Needed only if you'll commit / open PRs through the GitHub MCP server."
   printf "    Set up your GitHub token now? [y/N] "
-  read -r ANSWER
+  read -r ANSWER || ANSWER=""   # don't abort under 'set -e' on non-interactive EOF
   if [[ "$ANSWER" == [yY]* ]]; then
     zsh "$ROOT_DIR/scripts/env/install.sh" || echo "    (env install had an issue — see output above)"
     zsh "$ROOT_DIR/scripts/env/setup-github-pat.sh" || echo "    (token not set — run 'zsh scripts/env/setup-github-pat.sh' later)"
