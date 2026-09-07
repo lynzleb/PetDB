@@ -1,11 +1,12 @@
 :root {
-  --teal: #0f766e;
-  --teal-dark: #115e59;
-  --bg: #f8fafc;
-  --card: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
+  --maroon: #800000;
+  --maroon-dark: #5c0000;
+  --brown: #6b4f3a;
+  --bg: #f4ece0;
+  --card: #fffaf3;
+  --text: #2f2320;
+  --muted: #8c7a6b;
+  --border: #e4d8c6;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -20,19 +21,20 @@ body {
 }
 
 .app {
-  max-width: 480px;
-  margin: 0 auto;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .app-header {
-  background: var(--teal);
+  background: var(--maroon);
   color: #fff;
-  padding: 1.25rem 1rem calc(1.25rem + env(safe-area-inset-top));
   position: sticky;
   top: 0;
+}
+
+.app-header-inner {
+  padding: 1.25rem 1.5rem calc(1.25rem + env(safe-area-inset-top));
 }
 
 .app-header h1 {
@@ -48,6 +50,9 @@ body {
 
 .app-main {
   flex: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
   padding: 1rem;
 }
 
@@ -75,7 +80,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1rem;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 2px rgba(47, 35, 32, 0.06);
 }
 
 .pet-card-head {

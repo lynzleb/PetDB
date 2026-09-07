@@ -19,8 +19,10 @@ export function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>PetDB</h1>
-        <p className="subtitle">Pet health records</p>
+        <div className="app-header-inner">
+          <h1>PetDB</h1>
+          <p className="subtitle">Pet health records</p>
+        </div>
       </header>
 
       <main className="app-main">

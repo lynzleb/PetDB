@@ -11,8 +11,8 @@ export default defineConfig({
         name: 'PetDB',
         short_name: 'PetDB',
         description: 'Pet health records',
-        theme_color: '#0f766e',
-        background_color: '#ffffff',
+        theme_color: '#800000',
+        background_color: '#f4ece0',
         display: 'standalone',
         start_url: '/',
         icons: [
