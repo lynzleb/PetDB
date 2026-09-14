@@ -10,7 +10,14 @@
     },
     "chrome-devtools": {
       "command": "npx",
-      "args": ["chrome-devtools-mcp@latest"]
+      "args": [
+        "chrome-devtools-mcp@latest"
+      ]
+    },
+    "atlassian": {
+      "url": "https://mcp.atlassian.com/v2/mcp",
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }
