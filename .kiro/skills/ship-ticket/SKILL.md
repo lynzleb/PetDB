@@ -16,6 +16,22 @@ phase — they auto-activate, or you can run them directly (`/analyze-jira-ticke
 
 - A ticket key (e.g. `PET-123`), a Jira URL, or a number. If none is given, ask.
 
+## Checkpoints
+
+This workflow pauses for the user's approval at two points. At each checkpoint,
+present what was produced, then **stop and wait** for the user to approve
+(e.g. "go", "continue", "approved") before moving on. Do not proceed past a
+checkpoint on your own.
+
+- **Checkpoint 1 — after Phase 2 (Plan):** show the implementation plan and wait,
+  so the approach is approved before any code is written.
+- **Checkpoint 2 — after Phase 4 (Verify), before Phase 5 (Open PR):** show the
+  diff and verification results and wait, so nothing is pushed and no PR opens
+  without explicit approval.
+
+If the user amends the plan or asks for changes at a checkpoint, apply them and
+re-present before continuing.
+
 ## The loop
 
 ### Phase 1 — Analyze the ticket  → `analyze-jira-ticket`
@@ -27,6 +43,9 @@ verification path (`unit` / `chrome` / `both`).
 Turn the work spec into a concrete implementation plan: the approach and an ordered
 list of file changes, with each acceptance criterion mapped to a change. Surface
 blocking unknowns before writing code.
+
+> **⛔ CHECKPOINT 1 — approval required.** Present the plan and stop. Do not start
+> Phase 3 until the user approves. If they request changes, revise and re-present.
 
 ### Phase 3 — Implement  → `implement-ticket`
 Execute the plan, writing the code that satisfies the acceptance criteria. Read
@@ -44,8 +63,13 @@ Phase 3 (or re-plan in Phase 2 if the approach is wrong), and re-verify. If the 
 approach fails twice, step back and rethink rather than making incremental patches.
 Only leave this phase when every acceptance criterion is demonstrably met.
 
+> **⛔ CHECKPOINT 2 — approval required.** Once verification is green, present the
+> diff and verification results and stop. Do not branch, push, or open the PR until
+> the user approves.
+
 ### Phase 5 — Open the PR  → `open-pr`
-Only once verification is green: branch (`feature/PET-123-slug`), commit
+Only once verification is green **and Checkpoint 2 is approved**: branch
+(`feature/PET-123-slug`), commit
 (`PET-123: …`), push, open the GitHub PR with a body linking the Jira ticket and
 noting what was verified, then comment the PR URL back on the ticket.
 
