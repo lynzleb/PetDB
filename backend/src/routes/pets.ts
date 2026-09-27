@@ -4,10 +4,15 @@ import { prisma } from '../prisma.js';
 const SPECIES = ['DOG', 'CAT', 'BIRD', 'RABBIT', 'REPTILE', 'OTHER'] as const;
 type Species = (typeof SPECIES)[number];
 
+const SEXES = ['MALE', 'FEMALE', 'UNKNOWN'] as const;
+type Sex = (typeof SEXES)[number];
+
 interface PetBody {
   name?: unknown;
   species?: unknown;
   breed?: unknown;
+  sex?: unknown;
+  color?: unknown;
   birthDate?: unknown;
   ownerId?: unknown;
 }
@@ -49,6 +54,9 @@ export async function petRoutes(app: FastifyInstance) {
     if (typeof body.ownerId !== 'string') {
       return reply.code(400).send({ message: 'ownerId is required' });
     }
+    if (body.sex !== undefined && (typeof body.sex !== 'string' || !SEXES.includes(body.sex as Sex))) {
+      return reply.code(400).send({ message: `sex must be one of ${SEXES.join(', ')}` });
+    }
 
     const owner = await prisma.owner.findUnique({ where: { id: body.ownerId } });
     if (!owner) return reply.code(404).send({ message: 'Owner not found' });
@@ -58,6 +66,8 @@ export async function petRoutes(app: FastifyInstance) {
         name: body.name.trim(),
         species: body.species as Species,
         breed: typeof body.breed === 'string' ? body.breed : null,
+        sex: typeof body.sex === 'string' ? (body.sex as Sex) : null,
+        color: typeof body.color === 'string' ? body.color : null,
         birthDate: typeof body.birthDate === 'string' ? new Date(body.birthDate) : null,
         ownerId: body.ownerId,
       },

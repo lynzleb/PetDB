@@ -1,5 +1,7 @@
 export type Species = 'DOG' | 'CAT' | 'BIRD' | 'RABBIT' | 'REPTILE' | 'OTHER';
 
+export type Sex = 'MALE' | 'FEMALE' | 'UNKNOWN';
+
 export interface Owner {
   id: string;
   name: string;
@@ -29,6 +31,8 @@ export interface Pet {
   name: string;
   species: Species;
   breed?: string | null;
+  sex?: Sex | null;
+  color?: string | null;
   birthDate?: string | null;
   owner: Owner;
   bloodTests: BloodTest[];

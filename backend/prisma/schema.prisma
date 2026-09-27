@@ -25,6 +25,8 @@ model Pet {
   name         String
   species      Species
   breed        String?
+  sex          Sex?
+  color        String?
   birthDate    DateTime?
   owner        Owner         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId      String
@@ -70,4 +72,10 @@ enum Species {
   RABBIT
   REPTILE
   OTHER
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  UNKNOWN
 }

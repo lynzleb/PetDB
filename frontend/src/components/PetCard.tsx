@@ -9,9 +9,21 @@ const speciesEmoji: Record<Pet['species'], string> = {
   OTHER: '🐾',
 };
 
+const sexLabel: Record<NonNullable<Pet['sex']>, string> = {
+  MALE: '♂ Male',
+  FEMALE: '♀ Female',
+  UNKNOWN: 'Unknown sex',
+};
+
+const capitalize = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+
 export function PetCard({ pet }: { pet: Pet }) {
   const latestTest = pet.bloodTests[0];
   const latestVax = pet.vaccinations[0];
+
+  const details = [pet.breed ?? pet.species];
+  if (pet.color) details.push(pet.color);
+  if (pet.sex) details.push(sexLabel[pet.sex]);
 
   return (
     <li className="pet-card" data-testid="pet-card">
@@ -20,9 +32,9 @@ export function PetCard({ pet }: { pet: Pet }) {
           {speciesEmoji[pet.species]}
         </span>
         <div>
-          <h2 className="pet-name">{pet.name}</h2>
+          <h2 className="pet-name">{capitalize(pet.name)}</h2>
           <p className="pet-meta">
-            {pet.breed ?? pet.species} · owned by {pet.owner.name}
+            {details.join(' · ')} · owned by {pet.owner.name}
           </p>
         </div>
       </div>
