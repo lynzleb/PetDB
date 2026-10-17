@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { prisma } from '../prisma.js';
+import { DEFAULT_OWNER_EMAIL } from '../defaultOwner.js';
 
 interface OwnerBody {
   name?: unknown;
@@ -14,6 +15,23 @@ export async function ownerRoutes(app: FastifyInstance) {
       include: { pets: true },
       orderBy: { createdAt: 'desc' },
     });
+  });
+
+  // Get the canonical default owner (personal mode). Lets the frontend resolve
+  // the implicit owner's id without any owner UI. Looked up by the documented
+  // seeded email, so it doesn't depend on row ordering. Registered before
+  // `/owners/:id` — Fastify prioritizes static routes over parametric ones, so
+  // "default" is never treated as an id.
+  app.get('/owners/default', async (_request, reply) => {
+    const owner = await prisma.owner.findUnique({
+      where: { email: DEFAULT_OWNER_EMAIL },
+    });
+    if (!owner) {
+      return reply
+        .code(404)
+        .send({ message: 'Default owner not found. Run the database seed.' });
+    }
+    return owner;
   });
 
   // Get a single owner with pets and each pet's health records.

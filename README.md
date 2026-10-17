@@ -110,6 +110,21 @@ zsh scripts/env/setup-github-pat.sh # paste your own GitHub token when prompted
 
 See `backend/prisma/schema.prisma` for the source of truth.
 
+### Default owner (personal mode)
+
+PetDB's personal mode treats the owner as implicit. The seed creates one
+canonical **default owner** (`lynzle@example.com`, defined in
+`backend/src/defaultOwner.ts`), and the frontend resolves its id without any
+owner UI via:
+
+```
+GET /api/owners/default
+```
+
+This returns the default owner (404 if the database hasn't been seeded). The
+lookup is keyed by the documented email, so it stays correct no matter what
+other owners exist.
+
 ## AI workflow
 
 See [docs/ai-workflow.md](docs/ai-workflow.md) for how tickets and designs flow into code and get verified.

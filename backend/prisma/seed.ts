@@ -1,4 +1,5 @@
 import { PrismaClient, Species, Sex } from '@prisma/client';
+import { DEFAULT_OWNER } from '../src/defaultOwner.js';
 
 const prisma = new PrismaClient();
 
@@ -52,17 +53,19 @@ async function main() {
     console.log(`Seeded owner ${owner.name} (${owner.id})`);
   }
 
-  // Lynzle's cats — all Domestic Shorthair (DSH).
+  // Lynzle's cats — all Domestic Shorthair (DSH). Lynzle is the canonical
+  // default owner for personal mode (PET-4); the frontend resolves this owner
+  // via GET /api/owners/default and shows only these pets.
   const lynzle = await prisma.owner.findUnique({
-    where: { email: 'lynzle@example.com' },
+    where: { email: DEFAULT_OWNER.email },
   });
   if (lynzle) {
-    console.log(`Seed skipped for Lynzle — already exists (${lynzle.id})`);
+    console.log(`Seed skipped for Lynzle (default owner) — already exists (${lynzle.id})`);
   } else {
     const catOwner = await prisma.owner.create({
       data: {
-        name: 'Lynzle',
-        email: 'lynzle@example.com',
+        name: DEFAULT_OWNER.name,
+        email: DEFAULT_OWNER.email,
         pets: {
           create: [
             { name: 'assy', species: Species.CAT, breed: 'DSH', sex: Sex.FEMALE, color: 'creamsicle', birthDate: null },
