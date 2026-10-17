@@ -50,7 +50,7 @@ export function App() {
         {status === 'ready' && <AddPetForm onCreated={load} />}
         {status === 'ready' && pets.length === 0 && (
           <p className="hint" data-testid="empty-state">
-            No pets yet. Add your first pet above.
+            No pets yet. Use “Add pet” above to add your first one.
           </p>
         )}
         {status === 'ready' && pets.length > 0 && (

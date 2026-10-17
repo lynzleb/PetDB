@@ -22,22 +22,26 @@ export function PetCard({ pet }: { pet: Pet }) {
   const latestTest = pet.bloodTests[0];
   const latestVax = pet.vaccinations[0];
 
-  const details = [pet.breed ?? pet.species];
-  if (pet.color) details.push(pet.color);
-  if (pet.sex) details.push(sexLabel[pet.sex]);
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString(undefined, { dateStyle: 'medium' });
 
   return (
-    <li className="pet-card" data-testid="pet-card">
+    <li className={`pet-card species-${pet.species.toLowerCase()}`} data-testid="pet-card">
       <div className="pet-card-head">
         <span className="pet-emoji" aria-hidden>
           {speciesEmoji[pet.species]}
         </span>
-        <div>
+        <div className="pet-id">
           <h2 className="pet-name">{capitalize(pet.name)}</h2>
-          <p className="pet-meta">
-            {details.join(' · ')}
-            {APP_MODE === 'clinic' && ` · owned by ${pet.owner.name}`}
-          </p>
+          <ul className="pet-tags">
+            <li>
+              <span className="sr-only">Species: {pet.species.toLowerCase()}. </span>
+              {pet.breed ?? capitalize(pet.species.toLowerCase())}
+            </li>
+            {pet.color && <li>{pet.color}</li>}
+            {pet.sex && <li>{sexLabel[pet.sex]}</li>}
+            {APP_MODE === 'clinic' && <li>owned by {pet.owner.name}</li>}
+          </ul>
         </div>
       </div>
 
@@ -47,15 +51,15 @@ export function PetCard({ pet }: { pet: Pet }) {
           <dd>
             {latestTest
               ? `${latestTest.testType}: ${latestTest.value} ${latestTest.unit}`
-              : '—'}
+              : <span className="none">No record yet</span>}
           </dd>
         </div>
         <div>
           <dt>Last vaccinated</dt>
           <dd>
             {latestVax
-              ? new Date(latestVax.administeredAt).toLocaleDateString()
-              : '—'}
+              ? formatDate(latestVax.administeredAt)
+              : <span className="none">No record yet</span>}
           </dd>
         </div>
       </dl>
