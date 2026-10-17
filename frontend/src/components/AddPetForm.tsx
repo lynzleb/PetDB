@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { useId, useRef, useState } from 'react';
+import type { FormEvent, KeyboardEvent } from 'react';
 import { createPet } from '../api';
 import type { Sex, Species } from '../types';
 
@@ -16,6 +16,25 @@ export function AddPetForm({ onCreated }: { onCreated: () => void | Promise<void
   const [birthDate, setBirthDate] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+
+  function expand() {
+    setOpen(true);
+    // The panel is visibility:hidden until open, so focus after it renders.
+    requestAnimationFrame(() => nameRef.current?.focus());
+  }
+
+  function collapse() {
+    setOpen(false);
+    toggleRef.current?.focus();
+  }
+
+  function onKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && open) collapse();
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -37,6 +56,7 @@ export function AddPetForm({ onCreated }: { onCreated: () => void | Promise<void
       setColor('');
       setBirthDate('');
       await onCreated();
+      collapse();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add pet');
     } finally {
@@ -45,13 +65,30 @@ export function AddPetForm({ onCreated }: { onCreated: () => void | Promise<void
   }
 
   return (
-    <form className="add-pet-form" data-testid="add-pet-form" onSubmit={onSubmit}>
-      <h2 className="form-title">Add pet</h2>
+    <section className={`add-pet${open ? ' is-open' : ''}`} onKeyDown={onKeyDown}>
+      <button
+        ref={toggleRef}
+        type="button"
+        className="add-pet-toggle"
+        data-testid="add-pet-toggle"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => (open ? collapse() : expand())}
+      >
+        <span className="toggle-plus" aria-hidden>
+          +
+        </span>
+        Add pet
+      </button>
+      <div className="add-pet-panel" id={panelId}>
+        <div className="add-pet-panel-inner">
+          <form className="add-pet-form" data-testid="add-pet-form" onSubmit={onSubmit}>
       <div className="form-field">
-        <label htmlFor="pet-name">Name</label>
+        <label htmlFor="pet-name">Name (required)</label>
         <input
           id="pet-name"
           data-testid="pet-name-input"
+          ref={nameRef}
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -100,19 +137,27 @@ export function AddPetForm({ onCreated }: { onCreated: () => void | Promise<void
           onChange={(e) => setBirthDate(e.target.value)}
         />
       </div>
-      {error && (
-        <p className="form-error" role="alert" data-testid="add-pet-error">
-          {error}
-        </p>
-      )}
-      <button
-        type="submit"
-        className="btn-primary"
-        data-testid="add-pet-submit"
-        disabled={submitting}
-      >
-        {submitting ? 'Adding…' : 'Add pet'}
-      </button>
-    </form>
+            {error && (
+              <p className="form-error" role="alert" data-testid="add-pet-error">
+                {error}
+              </p>
+            )}
+            <div className="form-actions">
+              <button type="button" className="btn-quiet" onClick={collapse}>
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+                data-testid="add-pet-submit"
+                disabled={submitting}
+              >
+                {submitting ? 'Adding…' : 'Add pet'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
   );
 }
