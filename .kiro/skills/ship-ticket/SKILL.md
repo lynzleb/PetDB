@@ -34,6 +34,16 @@ re-present before continuing.
 
 ## The loop
 
+### Phase 0 — Mark the ticket In Progress
+As soon as you start shipping (before analysis), move the ticket to **In Progress**
+so the board reflects that work has begun. Use `transitionJiraIssue` with the ticket
+key and the target status (transition name `In Progress`). Guidance:
+- If the ticket is already In Progress, continue without re-transitioning.
+- If no matching transition is available to the calling user (custom workflow,
+  permissions), note it and continue — don't block the ship on it.
+- This is the only status change the workflow makes automatically. Moving the
+  ticket to **Done** stays manual (the user does it after merge), unless they ask.
+
 ### Phase 1 — Analyze the ticket  → `analyze-jira-ticket`
 Produce the work spec: goal, parent context, merged sibling tickets and takeaways
 from their GitHub diffs, acceptance criteria, scope hints, and the chosen
