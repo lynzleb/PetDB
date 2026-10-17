@@ -1,3 +1,4 @@
+import { APP_MODE } from '../config';
 import type { Pet } from '../types';
 
 const speciesEmoji: Record<Pet['species'], string> = {
@@ -34,7 +35,8 @@ export function PetCard({ pet }: { pet: Pet }) {
         <div>
           <h2 className="pet-name">{capitalize(pet.name)}</h2>
           <p className="pet-meta">
-            {details.join(' · ')} · owned by {pet.owner.name}
+            {details.join(' · ')}
+            {APP_MODE === 'clinic' && ` · owned by ${pet.owner.name}`}
           </p>
         </div>
       </div>

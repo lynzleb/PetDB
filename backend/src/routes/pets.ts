@@ -18,9 +18,11 @@ interface PetBody {
 }
 
 export async function petRoutes(app: FastifyInstance) {
-  // List all pets with their owner and health records (latest first).
-  app.get('/pets', async () => {
+  // List pets (optionally filtered by ?ownerId=) with their owner and health records (latest first).
+  app.get('/pets', async (request) => {
+    const { ownerId } = request.query as { ownerId?: string };
     return prisma.pet.findMany({
+      where: typeof ownerId === 'string' && ownerId !== '' ? { ownerId } : undefined,
       include: {
         owner: true,
         bloodTests: { orderBy: { takenAt: 'desc' } },

@@ -125,6 +125,10 @@ This returns the default owner (404 if the database hasn't been seeded). The
 lookup is keyed by the documented email, so it stays correct no matter what
 other owners exist.
 
+The frontend reads `VITE_APP_MODE` (`personal` by default, or `clinic`). In
+personal mode owner info is hidden and new pets attach to the default owner
+automatically. Owner data and endpoints remain for a future clinic mode.
+
 ## AI workflow
 
 See [docs/ai-workflow.md](docs/ai-workflow.md) for how tickets and designs flow into code and get verified.

@@ -38,3 +38,12 @@ export interface Pet {
   bloodTests: BloodTest[];
   vaccinations: Vaccination[];
 }
+
+export interface NewPetInput {
+  name: string;
+  species: Species;
+  breed?: string;
+  sex?: Sex;
+  color?: string;
+  birthDate?: string;
+}

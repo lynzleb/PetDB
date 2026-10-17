@@ -1,20 +1,33 @@
-import { useEffect, useState } from 'react';
-import { fetchPets } from './api';
+import { useCallback, useEffect, useState } from 'react';
+import { fetchDefaultOwner, fetchPets } from './api';
+import { APP_MODE } from './config';
 import type { Pet } from './types';
 import { PetCard } from './components/PetCard';
+import { AddPetForm } from './components/AddPetForm';
 
 export function App() {
   const [pets, setPets] = useState<Pet[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Personal mode shows only the default owner's pets; clinic mode shows all.
+  const load = useCallback(
+    () =>
+      (APP_MODE === 'personal' ? fetchDefaultOwner().then((o) => fetchPets(o.id)) : fetchPets())
+        .then((data) => {
+          setPets(data);
+          setStatus('ready');
+        })
+        .catch((e) => {
+          setErrorMessage(e instanceof Error ? e.message : '');
+          setStatus('error');
+        }),
+    [],
+  );
   useEffect(() => {
-    fetchPets()
-      .then((data) => {
-        setPets(data);
-        setStatus('ready');
-      })
-      .catch(() => setStatus('error'));
-  }, []);
+    load();
+  }, [load]);
 
   return (
     <div className="app">
@@ -29,12 +42,15 @@ export function App() {
         {status === 'loading' && <p className="hint">Loading pets…</p>}
         {status === 'error' && (
           <p className="hint hint-error" data-testid="load-error">
-            Could not reach the API. Is the backend running on :3001?
+            {errorMessage.startsWith('Default owner not found')
+              ? errorMessage
+              : 'Could not reach the API. Is the backend running on :3001?'}
           </p>
         )}
+        {status === 'ready' && <AddPetForm onCreated={load} />}
         {status === 'ready' && pets.length === 0 && (
           <p className="hint" data-testid="empty-state">
-            No pets yet. Seed the database to see records.
+            No pets yet. Add your first pet above.
           </p>
         )}
         {status === 'ready' && pets.length > 0 && (

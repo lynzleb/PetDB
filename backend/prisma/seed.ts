@@ -55,7 +55,8 @@ async function main() {
 
   // Lynzle's cats — all Domestic Shorthair (DSH). Lynzle is the canonical
   // default owner for personal mode (PET-4); the frontend resolves this owner
-  // via GET /api/owners/default and shows only these pets.
+  // via GET /api/owners/default and requests GET /api/pets?ownerId=<id>, so
+  // only these pets are shown in personal mode.
   const lynzle = await prisma.owner.findUnique({
     where: { email: DEFAULT_OWNER.email },
   });
