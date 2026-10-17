@@ -1,13 +1,18 @@
 :root {
   --maroon: #800000;
   --maroon-dark: #5c0000;
-  --brown: #6b4f3a;
+  --sage: #4d6b57;
+  --sage-soft: #e3ebdf;
   --bg: #f4ece0;
   --card: #fffaf3;
   --text: #2f2320;
-  --muted: #8c7a6b;
-  --border: #e4d8c6;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --muted: #6b5a4c;
+  --border: #e0d3bf;
+  --error: #9b1c1c;
+  --font-body: 'DM Sans', ui-rounded, 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --radius-card: 16px;
+  font-family: var(--font-body);
 }
 
 * {
@@ -18,6 +23,22 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 2px solid var(--maroon);
+  outline-offset: 2px;
 }
 
 .app {
@@ -26,34 +47,42 @@ body {
   flex-direction: column;
 }
 
+/* Slim header: one line, maroon kept as the single bold accent */
 .app-header {
   background: var(--maroon);
   color: #fff;
-  position: sticky;
-  top: 0;
+  border-bottom: 3px solid var(--maroon-dark);
 }
 
 .app-header-inner {
-  padding: 1.25rem 1.5rem calc(1.25rem + env(safe-area-inset-top));
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.6rem 1.25rem calc(0.6rem + env(safe-area-inset-top, 0px));
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
 }
 
 .app-header h1 {
   margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
   font-size: 1.5rem;
+  letter-spacing: -0.01em;
 }
 
 .subtitle {
-  margin: 0.25rem 0 0;
-  opacity: 0.85;
-  font-size: 0.9rem;
+  margin: 0;
+  color: #f1dcd2;
+  font-size: 0.875rem;
 }
 
 .app-main {
   flex: 1;
   width: 100%;
-  max-width: 480px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1rem 1.25rem 1.5rem;
 }
 
 .hint {
@@ -63,82 +92,207 @@ body {
 }
 
 .hint-error {
-  color: #b91c1c;
+  color: var(--error);
 }
 
+/* Pet grid */
 .pet-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 0.75rem;
 }
 
 .pet-card {
+  position: relative;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1rem;
+  border-radius: var(--radius-card);
+  padding: 0.8rem 0.9rem 0.8rem 1.1rem;
   box-shadow: 0 1px 2px rgba(47, 35, 32, 0.06);
+  overflow: hidden;
 }
+
+/* species-tinted spine: the card's one personality detail */
+.pet-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--accent, var(--sage));
+}
+
+.species-dog { --accent: #b5651d; }
+.species-cat { --accent: #800000; }
+.species-bird { --accent: #2f7d8c; }
+.species-rabbit { --accent: #8a6d9b; }
+.species-reptile { --accent: #4d6b57; }
+.species-other { --accent: #6b5a4c; }
 
 .pet-card-head {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.7rem;
 }
 
 .pet-emoji {
-  font-size: 2rem;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--sage-soft);
+  font-size: 1.5rem;
+}
+
+.pet-id {
+  min-width: 0;
 }
 
 .pet-name {
   margin: 0;
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
-.pet-meta {
-  margin: 0.15rem 0 0;
-  color: var(--muted);
-  font-size: 0.85rem;
+.pet-tags {
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.pet-tags li {
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: var(--sage-soft);
+  color: #2f4a38;
+  font-size: 0.8125rem;
 }
 
 .pet-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
-  margin: 0.9rem 0 0;
+  margin: 0.65rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--border);
 }
 
 .pet-stats dt {
   color: var(--muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  font-size: 0.8125rem;
+  font-weight: 500;
 }
 
 .pet-stats dd {
-  margin: 0.2rem 0 0;
+  margin: 0.1rem 0 0;
   font-weight: 600;
   font-size: 0.9rem;
+}
+
+.pet-stats .none {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Add pet disclosure */
+.add-pet {
+  margin-bottom: 0.75rem;
+}
+
+.add-pet-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1rem 0 0.75rem;
+  border: 1.5px dashed var(--muted);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.add-pet-toggle:hover,
+.is-open .add-pet-toggle {
+  background: var(--card);
+  border-color: var(--maroon);
+  border-style: solid;
+}
+
+.toggle-plus {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--maroon);
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.is-open .toggle-plus {
+  transform: rotate(45deg);
+}
+
+.add-pet-panel {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.4s var(--ease-out), visibility 0s linear 0.4s;
+}
+
+.is-open .add-pet-panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows 0.4s var(--ease-out), visibility 0s;
+}
+
+.add-pet-panel-inner {
+  overflow: hidden;
+  min-height: 0;
+  /* Spacing lives here (not as a margin on the form) so the height animates
+     smoothly from 0 instead of jumping by the margin amount. */
+  padding-top: 0.6rem;
+}
+
+/* Form fades and settles in slightly after the height starts opening. */
+.add-pet-form {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.3s var(--ease-out);
+}
+
+.is-open .add-pet-form {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.3s ease 0.08s, transform 0.4s var(--ease-out) 0.05s;
 }
 
 .add-pet-form {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 2px rgba(47, 35, 32, 0.06);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 0.75rem;
-}
-
-.form-title {
-  margin: 0;
-  font-size: 1.1rem;
+  align-items: end;
 }
 
 .form-field {
@@ -149,9 +303,8 @@ body {
 
 .form-field label {
   color: var(--muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
 .form-field input,
@@ -165,22 +318,33 @@ body {
   font: inherit;
 }
 
-.form-field input:focus-visible,
-.form-field select:focus-visible,
-.btn-primary:focus-visible {
-  outline: 2px solid var(--maroon);
-  outline-offset: 2px;
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
-.btn-primary {
+.btn-primary,
+.btn-quiet {
   min-height: 44px;
-  border: 0;
+  padding: 0 1.25rem;
   border-radius: 10px;
-  background: var(--maroon);
-  color: #fff;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+}
+
+.btn-primary {
+  border: 0;
+  background: var(--maroon);
+  color: #fff;
+}
+
+.btn-quiet {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
 }
 
 .btn-primary:disabled {
@@ -189,7 +353,34 @@ body {
 }
 
 .form-error {
+  grid-column: 1 / -1;
   margin: 0;
-  color: #b91c1c;
+  color: var(--error);
   font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .app-header-inner {
+    padding-inline: 1rem;
+  }
+  .app-main {
+    padding-inline: 1rem;
+  }
+  .pet-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .add-pet-panel,
+  .is-open .add-pet-panel,
+  .add-pet-form,
+  .is-open .add-pet-form,
+  .toggle-plus,
+  .add-pet-toggle {
+    transition: none;
+  }
+  .add-pet-form {
+    transform: none;
+  }
 }
