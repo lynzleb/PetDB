@@ -19,3 +19,17 @@ test('shows a known state (records, empty, or error)', async ({ page }) => {
 
   await expect(known.first()).toBeVisible({ timeout: 10_000 });
 });
+
+// Personal mode: the add-pet form has no owner field and cards show no owner.
+test('add pet form has no owner UI', async ({ page }) => {
+  await page.goto('/');
+  const form = page.getByTestId('add-pet-form');
+  const known = form.or(page.getByTestId('load-error'));
+  await expect(known.first()).toBeVisible({ timeout: 10_000 });
+  test.skip(!(await form.isVisible()), 'backend not reachable');
+
+  await expect(page.getByLabel('Name')).toBeVisible();
+  await expect(page.getByLabel('Species')).toBeVisible();
+  await expect(page.getByLabel(/owner/i)).toHaveCount(0);
+  await expect(page.getByText(/owned by/i)).toHaveCount(0);
+});
