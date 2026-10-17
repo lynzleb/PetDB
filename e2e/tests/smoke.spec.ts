@@ -23,10 +23,14 @@ test('shows a known state (records, empty, or error)', async ({ page }) => {
 // Personal mode: the add-pet form has no owner field and cards show no owner.
 test('add pet form has no owner UI', async ({ page }) => {
   await page.goto('/');
-  const form = page.getByTestId('add-pet-form');
-  const known = form.or(page.getByTestId('load-error'));
+  const toggle = page.getByTestId('add-pet-toggle');
+  const known = toggle.or(page.getByTestId('load-error'));
   await expect(known.first()).toBeVisible({ timeout: 10_000 });
-  test.skip(!(await form.isVisible()), 'backend not reachable');
+  test.skip(!(await toggle.isVisible()), 'backend not reachable');
+
+  // The form is collapsed by default; expand it first.
+  await toggle.click();
+  await expect(page.getByTestId('add-pet-form')).toBeVisible();
 
   await expect(page.getByLabel('Name')).toBeVisible();
   await expect(page.getByLabel('Species')).toBeVisible();
